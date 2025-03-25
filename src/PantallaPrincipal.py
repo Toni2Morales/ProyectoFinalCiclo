@@ -3,8 +3,9 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
-from kivy.graphics import Color, Rectangle, RoundedRectangle
+from kivy.graphics import Color, Rectangle
 from kivy.uix.textinput import TextInput
+from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
 
 class ScreenThree(Screen):
@@ -95,15 +96,11 @@ class ScreenThree(Screen):
                 text="Incompletas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
-                background_normal='',
-                background_color=(0.3, 0.5, 0.8, 1)  # Azul claro
             )
             button_subsection_2 = Button(
-                text="completas",
+                text="Completas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
-                background_normal='',
-                background_color=(0.8, 0.5, 0.3, 1)  # Naranja claro
             )
 
             # Vincular los botones de subsecciones a funciones
@@ -132,23 +129,41 @@ class ScreenThree(Screen):
                 box_ly = BoxLayout(
                     size_hint_y=None,
                     height=200,
+                    size_hint_x=0.7,
+                    pos_hint={"x": 0.25},
+                )
+                float_ly = FloatLayout(
+                    size_hint_y=None,
+                    height=200,
                     size_hint_x=0.5,
                     pos_hint={"x": 0.25},
                 )
-                float_ly = FloatLayout()
-
-                float_ly.add_widget(Label(
-                    text=f"Elemento {i + 1}",
-                    font_size=24,
-                    size_hint=(0.8, 0.2),
-                    pos_hint={"x": 0.1, "y": 0.6}
-                ))
-                box_ly.add_widget(float_ly)
-                box_ly.add_widget(Button(
+                float_ly.add_widget(Button(
                     text=f"Elemento {i + 1}",
                     background_normal='',
-                    background_color=(0.57, 0.37, 0.57, 0.39)
-                ))
+                    background_color=(0.57, 0.37, 0.57, 0.39),
+                    pos_hint={"x": 0.4, "y": 0},
+                    size_hint=(0.6, 1))
+                )
+                float_ly.add_widget(Button(
+                    text="1",
+                    pos_hint={"x": 0, "y": 0.9},
+                    size_hint=(0.01, 0.01))
+                )
+                float_ly.add_widget(Button(
+                    text="2",
+                    pos_hint={"x": 0.1, "y": 0.9},
+                    size_hint=(0.01, 0.01))
+                )
+                float_ly.add_widget(Image(
+                    source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
+                    fit_mode = "scale-down",
+                    pos_hint={"x": -0.28, "y": 0},
+                    size_hint=(0.7, 0.7),
+                    keep_ratio=True)  # Mantiene la proporción de aspecto
+                )
+
+                box_ly.add_widget(float_ly)
                 scroll_content.add_widget(box_ly)
 
             # Añadir el contenido al ScrollView
@@ -165,10 +180,10 @@ class ScreenThree(Screen):
             self.button2.text = "NOVELAS"
             self.button3.text = "[u]PERFIL[/u]"
             self.section_layout.add_widget(Label(
-                text="Esta es la Sección C",
+                text="PERFIL",
                 font_size=24,
                 size_hint=(0.8, 0.2),
-                pos_hint={"x": 0.1, "y": 0.6}
+                pos_hint={"x": 0.1, "y": 0.8}
             ))
     def show_subsection(self, scroll_content, subsection_number):
         """Actualizar el contenido según la subsección seleccionada."""
@@ -189,15 +204,11 @@ class ScreenThree(Screen):
                 text="Incompletas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
-                background_normal='',
-                background_color=(0.3, 0.5, 0.8, 1)  # Azul claro
             )
             button_subsection_2 = Button(
                 text="Completas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
-                background_normal='',
-                background_color=(0.8, 0.5, 0.3, 1)  # Naranja claro
             )
 
             # Vincular los botones de subsecciones a funciones
@@ -226,23 +237,41 @@ class ScreenThree(Screen):
                 box_ly = BoxLayout(
                     size_hint_y=None,
                     height=200,
+                    size_hint_x=0.7,
+                    pos_hint={"x": 0.25},
+                )
+                float_ly = FloatLayout(
+                    size_hint_y=None,
+                    height=200,
                     size_hint_x=0.5,
                     pos_hint={"x": 0.25},
                 )
-                float_ly = FloatLayout()
-
-                float_ly.add_widget(Label(
-                    text=f"Elemento {i + 1}",
-                    font_size=24,
-                    size_hint=(0.8, 0.2),
-                    pos_hint={"x": 0.1, "y": 0.6}
-                ))
-                box_ly.add_widget(float_ly)
-                box_ly.add_widget(Button(
+                float_ly.add_widget(Button(
                     text=f"Elemento {i + 1}",
                     background_normal='',
-                    background_color=(0.57, 0.37, 0.57, 0.39)
-                ))
+                    background_color=(0.57, 0.37, 0.57, 0.39),
+                    pos_hint={"x": 0.4, "y": 0},
+                    size_hint=(0.6, 1))
+                )
+                float_ly.add_widget(Button(
+                    text="1",
+                    pos_hint={"x": 0, "y": 0.9},
+                    size_hint=(0.01, 0.01))
+                )
+                float_ly.add_widget(Button(
+                    text="2",
+                    pos_hint={"x": 0.1, "y": 0.9},
+                    size_hint=(0.01, 0.01))
+                )
+                float_ly.add_widget(Image(
+                    source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
+                    fit_mode = "scale-down",
+                    pos_hint={"x": -0.28, "y": 0},
+                    size_hint=(0.7, 0.7),
+                    keep_ratio=True)  # Mantiene la proporción de aspecto
+                )
+
+                box_ly.add_widget(float_ly)
                 scroll_content.add_widget(box_ly)
 
             # Añadir el contenido al ScrollView
@@ -255,13 +284,46 @@ class ScreenThree(Screen):
             self.section_layout.add_widget(section_b_layout)
 
         elif subsection_number == 2:
-            for i in range(10):
-                scroll_content.add_widget(Label(
-                    text=f"Elemento en Subsección 2 - {i + 1}",
-                    font_size=20,
+            for i in range(20):  # Ejemplo: añadir múltiples elementos
+                box_ly = BoxLayout(
                     size_hint_y=None,
-                    height=50
-                ))
+                    height=200,
+                    size_hint_x=0.7,
+                    pos_hint={"x": 0.25},
+                )
+                float_ly = FloatLayout(
+                    size_hint_y=None,
+                    height=200,
+                    size_hint_x=0.5,
+                    pos_hint={"x": 0.25},
+                )
+                float_ly.add_widget(Button(
+                    text=f"Elemento {i + 1}",
+                    background_normal='',
+                    background_color=(0.57, 0.37, 0.57, 0.39),
+                    pos_hint={"x": 0.4, "y": 0},
+                    size_hint=(0.6, 1))
+                )
+                float_ly.add_widget(Button(
+                    text="1",
+                    pos_hint={"x": 0, "y": 0.9},
+                    size_hint=(0.01, 0.01))
+                )
+                float_ly.add_widget(Button(
+                    text="2",
+                    pos_hint={"x": 0.1, "y": 0.9},
+                    size_hint=(0.01, 0.01))
+                )
+                float_ly.add_widget(Image(
+                    source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
+                    fit_mode = "scale-down",
+                    pos_hint={"x": -0.28, "y": 0},
+                    size_hint=(0.7, 0.7),
+                    keep_ratio=True)  # Mantiene la proporción de aspecto
+                )
+
+                box_ly.add_widget(float_ly)
+                scroll_content.add_widget(box_ly)
 
     def update_background(self, *args):
         self.rect.size = self.size
