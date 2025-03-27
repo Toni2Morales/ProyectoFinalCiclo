@@ -138,22 +138,29 @@ class ScreenThree(Screen):
                     size_hint_x=0.5,
                     pos_hint={"x": 0.25},
                 )
-                float_ly.add_widget(Button(
-                    text=f"Elemento {i + 1}",
+                Button1 = Button(
+                    text=f"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" + "\nLeer más ...",
                     background_normal='',
                     background_color=(0.57, 0.37, 0.57, 0.39),
                     pos_hint={"x": 0.4, "y": 0},
-                    size_hint=(0.6, 1))
+                    size_hint=(0.6, 1),
+                    valign = "center",
+                    halign = "left",
+                    text_size=(None, None))
+                Button1.bind(
+                    size=lambda instance, value: setattr(instance, 'text_size', value)
                 )
+
+                float_ly.add_widget(Button1)
                 float_ly.add_widget(Button(
-                    text="1",
                     pos_hint={"x": 0, "y": 0.9},
-                    size_hint=(0.01, 0.01))
+                    background_normal = "assets/images/CorazonBlanco.png",
+                    size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Button(
-                    text="2",
+                    background_normal = "assets/images/Comentarios.png",
                     pos_hint={"x": 0.1, "y": 0.9},
-                    size_hint=(0.01, 0.01))
+                    size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Image(
                     source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
