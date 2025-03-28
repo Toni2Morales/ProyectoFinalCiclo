@@ -7,6 +7,8 @@ from kivy.graphics import Color, Rectangle
 from kivy.uix.textinput import TextInput
 from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.filechooser import FileChooserListView
+from kivy.uix.popup import Popup
 
 class ScreenThree(Screen):
     def __init__(self, **kwargs):
@@ -186,12 +188,65 @@ class ScreenThree(Screen):
             self.button1.text = "CREACIÓN"
             self.button2.text = "NOVELAS"
             self.button3.text = "[u]PERFIL[/u]"
-            self.section_layout.add_widget(Label(
-                text="PERFIL",
-                font_size=24,
-                size_hint=(0.8, 0.2),
-                pos_hint={"x": 0.1, "y": 0.8}
-            ))
+
+            # Diseño para la sección C
+            section_c_layout = FloatLayout(size_hint=(1, 1))
+
+            # Crear un botón para seleccionar la imagen
+            select_image_button = Button(
+                text="Seleccionar Imagen",
+                background_normal="assets/images/Perfil.png",  # Imagen de muestra
+                size_hint=(None, None),  # Desactivamos el ajuste proporcional
+                size=(200, 200),
+                pos_hint={"x": 0.1, "y": 0.7}
+            )
+
+            # Función para abrir el FileChooser
+            def open_file_chooser(instance):
+                # Crear el FileChooserPopup
+                file_chooser = FileChooserListView(
+                    size_hint=(0.8, 0.8),
+                    pos_hint={"x": 0.1, "y": 0.2},  # Ajusta la posición
+                )
+                
+                # Botón de confirmación
+                confirm_button = Button(
+                    text="Confirmar selección",
+                    size_hint=(0.8, 0.1),
+                    pos_hint={"x": 0.1, "y": 0.05}
+                )
+                
+                # Contenedor del popup (FileChooser + botón de confirmación)
+                popup_content = FloatLayout()
+                popup_content.add_widget(file_chooser)
+                popup_content.add_widget(confirm_button)
+                
+                popup = Popup(
+                    title="Selecciona una imagen",
+                    content=popup_content,
+                    size_hint=(0.9, 0.9)
+                )
+                
+                def confirm_selection(instance):
+                    if file_chooser.selection:  # Verifica si hay selección
+                        select_image_button.background_normal = file_chooser.selection[0]
+                        popup.dismiss()  # Cierra el Popup
+                
+                # Vincula el botón de confirmación al evento
+                confirm_button.bind(on_press=confirm_selection)
+                
+                popup.open()
+
+
+            # Vincular el botón con la función de abrir el FileChooser
+            select_image_button.bind(on_press=open_file_chooser)
+
+            # Añadir el botón al diseño de la sección C
+            section_c_layout.add_widget(select_image_button)
+
+            # Agregar el diseño a la sección dinámica
+            self.section_layout.add_widget(section_c_layout)
+
     def show_subsection(self, scroll_content, subsection_number):
         """Actualizar el contenido según la subsección seleccionada."""
         # Limpiar el contenido actual del scroll_content
@@ -253,22 +308,29 @@ class ScreenThree(Screen):
                     size_hint_x=0.5,
                     pos_hint={"x": 0.25},
                 )
-                float_ly.add_widget(Button(
-                    text=f"Elemento {i + 1}",
+                Button1 = Button(
+                    text=f"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" + "\nLeer más ...",
                     background_normal='',
                     background_color=(0.57, 0.37, 0.57, 0.39),
                     pos_hint={"x": 0.4, "y": 0},
-                    size_hint=(0.6, 1))
+                    size_hint=(0.6, 1),
+                    valign = "center",
+                    halign = "left",
+                    text_size=(None, None))
+                Button1.bind(
+                    size=lambda instance, value: setattr(instance, 'text_size', value)
                 )
+
+                float_ly.add_widget(Button1)
                 float_ly.add_widget(Button(
-                    text="1",
                     pos_hint={"x": 0, "y": 0.9},
-                    size_hint=(0.01, 0.01))
+                    background_normal = "assets/images/CorazonBlanco.png",
+                    size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Button(
-                    text="2",
+                    background_normal = "assets/images/Comentarios.png",
                     pos_hint={"x": 0.1, "y": 0.9},
-                    size_hint=(0.01, 0.01))
+                    size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Image(
                     source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
