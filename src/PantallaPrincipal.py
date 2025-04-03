@@ -75,7 +75,7 @@ class ScreenThree(Screen):
             self.button2.text = "NOVELAS"
             self.button3.text = "PERFIL"
             self.section_layout.add_widget(Label(
-                text="Esta es la Sección A",
+                text="TUS CREACIONES",
                 font_size=24,
                 size_hint=(0.8, 0.2),
                 pos_hint={"x": 0.1, "y": 0.6}
@@ -244,8 +244,73 @@ class ScreenThree(Screen):
             # Añadir el botón al diseño de la sección C
             section_c_layout.add_widget(select_image_button)
 
+            # Añadir el NICKNAME en grande debajo del botón
+            nickname_label = Label(
+                text="NICKNAME",  # Aquí puedes cambiar el texto a lo que quieras
+                font_size=48,
+                size_hint=(None, None),
+                size=(400, 100),
+                pos_hint={"x": 0, "y": 0.6},
+                bold=True,
+                color=(1, 1, 1, 1)  # Color blanco
+            )
+            section_c_layout.add_widget(nickname_label)
+
+            # Crear los 3 rectángulos azules con texto dentro
+            def create_rectangle_with_text(pos_hint, text):
+                # Rectángulo Azul
+                with section_c_layout.canvas:
+                    Color(0, 0.5, 0.5, 1)  # Color azul
+                    rect = Rectangle(
+                        pos=(pos_hint['x'] * self.width, pos_hint['y'] * self.height),
+                        size=(self.width * 0.3, 50)  # Tamaño del rectángulo
+                    )
+                
+                # Crear un Label dentro del rectángulo
+                rect_label = Label(
+                    text=text,
+                    font_size=24,
+                    size_hint=(None, None),
+                    size=(self.width * 0.25, 100),
+                    pos_hint=pos_hint,
+                    color=(1, 1, 1, 1),  # Color blanco
+                    valign="middle",
+                    halign="center"
+                )
+                
+                section_c_layout.add_widget(rect_label)
+
+            # Llamar a la función para crear los rectángulos con texto
+            create_rectangle_with_text(pos_hint={"x": 0.05, "y": 0.5}, text="24 seguidos")
+            create_rectangle_with_text(pos_hint={"x": 0.35, "y": 0.5}, text="65 seguidores")
+            create_rectangle_with_text(pos_hint={"x": 0.65, "y": 0.5}, text="4 amigos")
+            
+            section_c_layout.add_widget(Label(
+                text="Logros",
+                font_size=24,
+                size_hint=(0, 0),
+                pos_hint={"x": 0.1, "y": 0.5}
+            ))
+
+            section_c_layout.add_widget(Button(
+                text="Logro1",
+                size_hint=(0.3, 0.3),
+                pos_hint={"x": 0, "y": 0.1}
+            ))
+            section_c_layout.add_widget(Button(
+                text="Logro2",
+                size_hint=(0.3, 0.3),
+                pos_hint={"x": 0.3, "y": 0.1}
+            ))
+            section_c_layout.add_widget(Button(
+                text="Logro3",
+                size_hint=(0.3, 0.3),
+                pos_hint={"x": 0.6, "y": 0.1}
+            ))
             # Agregar el diseño a la sección dinámica
             self.section_layout.add_widget(section_c_layout)
+
+
 
     def show_subsection(self, scroll_content, subsection_number):
         """Actualizar el contenido según la subsección seleccionada."""
@@ -353,6 +418,47 @@ class ScreenThree(Screen):
             self.section_layout.add_widget(section_b_layout)
 
         elif subsection_number == 2:
+            self.button1.text = "CREACIÓN"
+            self.button2.text = "[u]NOVELAS[/u]"
+            self.button3.text = "PERFIL"
+
+            # Crear un FloatLayout para la sección B
+            section_b_layout = FloatLayout(size_hint=(1, 1))
+
+            # Crear los botones superiores para las subsecciones
+            button_subsection_1 = Button(
+                text="Incompletas",
+                size_hint=(0.3, 0.1),
+                pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
+            )
+            button_subsection_2 = Button(
+                text="Completas",
+                size_hint=(0.3, 0.1),
+                pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
+            )
+
+            # Vincular los botones de subsecciones a funciones
+            button_subsection_1.bind(on_press=lambda x: self.show_subsection(scroll_content, 1))
+            button_subsection_2.bind(on_press=lambda x: self.show_subsection(scroll_content, 2))
+
+            # Añadir los botones de subsección al diseño de la Sección B
+            section_b_layout.add_widget(button_subsection_1)
+            section_b_layout.add_widget(button_subsection_2)
+
+            # Crear un ScrollView para permitir el desplazamiento
+            scroll_view = ScrollView(
+                size_hint=(1, 0.75),  # Ajustar el tamaño para dar espacio a los botones superiores
+                pos_hint={"x": 0, "y": 0}
+            )
+
+            # Contenedor dentro del ScrollView (BoxLayout)
+            scroll_content = BoxLayout(
+                orientation="vertical",  # Apilar los widgets verticalmente
+                size_hint_y=None         # Habilitar desplazamiento vertical
+            )
+            scroll_content.bind(minimum_height=scroll_content.setter("height"))  # Ajustar altura dinámica
+
+            # Añadir contenido inicial al contenedor
             for i in range(20):  # Ejemplo: añadir múltiples elementos
                 box_ly = BoxLayout(
                     size_hint_y=None,
@@ -366,22 +472,29 @@ class ScreenThree(Screen):
                     size_hint_x=0.5,
                     pos_hint={"x": 0.25},
                 )
-                float_ly.add_widget(Button(
-                    text=f"Elemento {i + 1}",
+                Button1 = Button(
+                    text=f"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" + "\nLeer más ...",
                     background_normal='',
                     background_color=(0.57, 0.37, 0.57, 0.39),
                     pos_hint={"x": 0.4, "y": 0},
-                    size_hint=(0.6, 1))
+                    size_hint=(0.6, 1),
+                    valign = "center",
+                    halign = "left",
+                    text_size=(None, None))
+                Button1.bind(
+                    size=lambda instance, value: setattr(instance, 'text_size', value)
                 )
+
+                float_ly.add_widget(Button1)
                 float_ly.add_widget(Button(
-                    text="1",
                     pos_hint={"x": 0, "y": 0.9},
-                    size_hint=(0.01, 0.01))
+                    background_normal = "assets/images/CorazonBlanco.png",
+                    size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Button(
-                    text="2",
+                    background_normal = "assets/images/Comentarios.png",
                     pos_hint={"x": 0.1, "y": 0.9},
-                    size_hint=(0.01, 0.01))
+                    size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Image(
                     source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
@@ -393,6 +506,16 @@ class ScreenThree(Screen):
 
                 box_ly.add_widget(float_ly)
                 scroll_content.add_widget(box_ly)
+
+            # Añadir el contenido al ScrollView
+            scroll_view.add_widget(scroll_content)
+
+            # Añadir el ScrollView al diseño principal de la sección B
+            section_b_layout.add_widget(scroll_view)
+
+            # Agregar el diseño completo de la Sección B al área dinámica
+            self.section_layout.add_widget(section_b_layout)
+
 
     def update_background(self, *args):
         self.rect.size = self.size
