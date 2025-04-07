@@ -7,22 +7,31 @@ def ejecutar_consulta(query, parametros=None):
 
     :param query: Consulta SQL como una cadena (str).
     :param parametros: Parámetros para la consulta (tuple), opcional.
-    :return: Resultados de la consulta como una lista de tuplas.
+    :return: Resultados de la consulta como una lista de tuplas (si aplica).
     """
     try:
         # Conexión a la base de datos
         conexion = mysql.connector.connect(
             host='localhost',
-            database='mi_base_datos',
-            user='tu_usuario',
-            password='tu_contraseña'
+            port=3306,
+            database='bbddproyecto',
+            user='root',
+            password='root'
         )
 
         if conexion.is_connected():
             cursor = conexion.cursor()
             cursor.execute(query, parametros)
-            resultados = cursor.fetchall()
-            return resultados
+            
+            # Si la consulta es de tipo SELECT, obtén los resultados
+            if query.strip().upper().startswith("SELECT"):
+                resultados = cursor.fetchall()
+                return resultados
+            else:
+                # Para consultas como INSERT, UPDATE o DELETE, haz commit
+                conexion.commit()
+                print("Consulta ejecutada correctamente.")
+                return None
 
     except Error as error:
         print(f"Error al conectar o ejecutar la consulta: {error}")
@@ -34,12 +43,14 @@ def ejecutar_consulta(query, parametros=None):
             conexion.close()
             print("Conexión cerrada.")
 
+
 # Ejemplo de uso de la función
-consulta = "SELECT * FROM usuarios WHERE edad > %s"
-parametros = (18,)
+# correo ='ejemplo@email.com'
+# consulta = f"SELECT * FROM usuarios WHERE correo = '{correo}'"
+# # parametros = ()
 
-resultados = ejecutar_consulta(consulta, parametros)
+# resultados = ejecutar_consulta(consulta)
 
-if resultados:
-    for fila in resultados:
-        print(f"ID: {fila[0]}, Nombre: {fila[1]}, Edad: {fila[2]}")
+# if resultados:
+#     for fila in resultados:
+#         print(f"ID: {fila[0]}, Correo: {fila[1]}, Contraseña: {fila[2]}")

@@ -2,7 +2,6 @@ from kivy.uix.screenmanager import Screen
 from kivy.graphics import Color, Rectangle
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
-
 # Pantalla principal con dos botones
 class MainScreen(Screen):
     def __init__(self, **kwargs):
