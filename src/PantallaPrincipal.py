@@ -37,15 +37,15 @@ class ScreenThree(Screen):
         self.button1 = Button(
             text="Creación",
             markup = True,
-            background_color=(0.57, 0.37, 0.57, 0.39))
+            background_color=(0.57, 0.37, 0.57, 1))
         self.button2 = Button(
             text="Novelas",
             markup = True,
-            background_color=(0.57, 0.37, 0.57, 0.39))
+            background_color=(0.57, 0.37, 0.57, 1))
         self.button3 = Button(
             text="Perfil",
             markup = True,
-            background_color=(0.57, 0.37, 0.57, 0.39))
+            background_color=(0.57, 0.37, 0.57, 1))
 
         # Vincular los botones para cambiar secciones
         self.button1.bind(on_press=lambda x: self.change_section("Sección A"))
@@ -98,11 +98,13 @@ class ScreenThree(Screen):
                 text="Incompletas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
+                background_color=(0.57, 0.37, 0.57, 1)
             )
             button_subsection_2 = Button(
                 text="Completas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
+                background_color=(0.57, 0.37, 0.57, 1)
             )
 
             # Vincular los botones de subsecciones a funciones
@@ -331,11 +333,13 @@ class ScreenThree(Screen):
                 text="Incompletas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
+                background_color=(0.57, 0.37, 0.57, 1)
             )
             button_subsection_2 = Button(
                 text="Completas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
+                background_color=(0.57, 0.37, 0.57, 1)
             )
 
             # Vincular los botones de subsecciones a funciones
@@ -430,11 +434,13 @@ class ScreenThree(Screen):
                 text="Incompletas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
+                background_color=(0.57, 0.37, 0.57, 1)
             )
             button_subsection_2 = Button(
                 text="Completas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
+                background_color=(0.57, 0.37, 0.57, 1)
             )
 
             # Vincular los botones de subsecciones a funciones

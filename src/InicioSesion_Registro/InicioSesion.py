@@ -4,6 +4,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Rectangle
+from ..ConexionMySQL import ejecutar_consulta
 
 class ScreenOne(Screen):
     def __init__(self, **kwargs):
@@ -24,6 +25,12 @@ class ScreenOne(Screen):
             font_size=35,
             size_hint=(0.5, 0.2),
             pos_hint={"x": 0.25, "y": 0.7}
+        )
+        label2 = Label(
+            text="",
+            font_size=18,
+            size_hint=(0.5, 0.2),
+            pos_hint={"x": 0.25, "y": 0.2}
         )
         button2 = Button(
             text="<----------------------------------------------------------------",
@@ -59,12 +66,25 @@ class ScreenOne(Screen):
             height = 30
         )
 
-        button1.bind(on_press=lambda x: setattr(self.manager, 'current', 'screen_three') if textInput1.text == "correo" and textInput2.text == "contra" else print("Incorrecto"))
+        def comprobar_correo_contrasegna(correo, contrasegna):
+            # Consulta parametrizada para evitar inyección SQL
+            consulta = "SELECT * FROM usuarios WHERE correo = %s"
+            parametros = (correo,)
+            resultados = ejecutar_consulta(consulta, parametros)
+            # Verificar si el correo ya existe
+            for fila in resultados:
+                if fila[1] == correo and fila[2] == contrasegna:
+                    return True
+            label2.text = "Correo o contraseña incorrectos"
+            return False
+    
+        button1.bind(on_press=lambda x: setattr(self.manager, 'current', 'screen_three') if comprobar_correo_contrasegna(textInput1.text, textInput2.text) else None)
         button2.bind(on_press=lambda x: setattr(self.manager, 'current', 'main'))
         
         layout.add_widget(textInput1)
         layout.add_widget(textInput2)
         layout.add_widget(label)
+        layout.add_widget(label2)
         layout.add_widget(button1)
         layout.add_widget(button2)
         self.add_widget(layout)
@@ -72,3 +92,5 @@ class ScreenOne(Screen):
     def update_background(self, *args):
         self.rect.size = self.size
         self.rect.pos = self.pos
+    
+
