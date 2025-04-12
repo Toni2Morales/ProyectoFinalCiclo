@@ -1,0 +1,42 @@
+{"Inserciones":[{
+    "_id": {
+      "$oid": "67fa88e4789886a02ac7ed0a"
+    },
+    "original": true,
+    "name": "Novela1",
+    "img": {
+      "$binary": {
+        "base64": "MDAwMTEwMTAxMDExMDEwMQ==",
+        "subType": "00"
+      }
+    },
+    "páginas": [
+      "pagina1",
+      "pagina2",
+      "pagina3",
+      "pagina4"
+    ]
+  },{
+    "_id": {
+      "$oid": "67fa8e93789886a02ac7ed0e"
+    },
+    "original": false,
+    "reference": {
+      "$oid": "67fa88e4789886a02ac7ed0a"
+    },
+    "name": "Novela1",
+    "img": {
+      "$binary": {
+        "base64": "MDAwMTEwMTAxMDExMDEwMQ==",
+        "subType": "00"
+      }
+    },
+    "páginas": [
+      "pagina5",
+      "pagina6",
+      "pagina7",
+      "pagina8"
+    ]
+  }
+
+]}
