@@ -4,7 +4,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.graphics import Color, Rectangle
-from kivy.uix.textinput import TextInput
 from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.filechooser import FileChooserListView
@@ -199,8 +198,8 @@ class ScreenThree(Screen):
                 text="Seleccionar Imagen",
                 background_normal="assets/images/Perfil.png",  # Imagen de muestra
                 size_hint=(None, None),  # Desactivamos el ajuste proporcional
-                size=(200, 200),
-                pos_hint={"x": 0.1, "y": 0.7}
+                size=(180, 180),
+                pos_hint={"x": 0.1, "y": 0.73}
             )
 
             # Función para abrir el FileChooser
@@ -283,7 +282,7 @@ class ScreenThree(Screen):
                 section_c_layout.add_widget(rect_label)
 
             # Llamar a la función para crear los rectángulos con texto
-            create_rectangle_with_text(pos_hint={"x": 0.05, "y": 0.5}, text="24 seguidos")
+            create_rectangle_with_text(pos_hint={"x": 0.1, "y": 0.5}, text="24 seguidos")
             create_rectangle_with_text(pos_hint={"x": 0.35, "y": 0.5}, text="65 seguidores")
             create_rectangle_with_text(pos_hint={"x": 0.65, "y": 0.5}, text="4 amigos")
             
@@ -291,23 +290,23 @@ class ScreenThree(Screen):
                 text="Logros",
                 font_size=24,
                 size_hint=(0, 0),
-                pos_hint={"x": 0.1, "y": 0.5}
+                pos_hint={"x": 0.15, "y": 0.5}
             ))
 
             section_c_layout.add_widget(Button(
                 text="Logro1",
                 size_hint=(0.3, 0.3),
-                pos_hint={"x": 0, "y": 0.1}
+                pos_hint={"x": 0.1, "y": 0.1}
             ))
             section_c_layout.add_widget(Button(
                 text="Logro2",
                 size_hint=(0.3, 0.3),
-                pos_hint={"x": 0.3, "y": 0.1}
+                pos_hint={"x": 0.4, "y": 0.1}
             ))
             section_c_layout.add_widget(Button(
                 text="Logro3",
                 size_hint=(0.3, 0.3),
-                pos_hint={"x": 0.6, "y": 0.1}
+                pos_hint={"x": 0.7, "y": 0.1}
             ))
             # Agregar el diseño a la sección dinámica
             self.section_layout.add_widget(section_c_layout)
