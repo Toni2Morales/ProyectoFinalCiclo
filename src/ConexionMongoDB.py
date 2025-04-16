@@ -1,47 +1,35 @@
 from pymongo import MongoClient
+from bson.binary import Binary
+from bson import ObjectId
+import os
+class MongoDBManager:
+    def __init__(self, uri, base_de_datos, coleccion):
+        # Conectar a MongoDB
+        self.cliente = MongoClient(uri)
+        self.base_de_datos = self.cliente[base_de_datos]
+        self.coleccion = self.base_de_datos[coleccion]
 
-def ejecutar_consulta_mongodb(host, puerto, nombre_base_datos, nombre_coleccion, consulta):
-    """
-    Realiza una consulta a MongoDB.
+    def insertar_documento(self, documento):
+        """Inserta un documento en la colección."""
+        resultado = self.coleccion.insert_one(documento)
 
-    :param host: Dirección del servidor MongoDB (por ejemplo, "localhost").
-    :param puerto: Puerto del servidor MongoDB (por ejemplo, 27017).
-    :param nombre_base_datos: Nombre de la base de datos.
-    :param nombre_coleccion: Nombre de la colección.
-    :param consulta: Consulta a ejecutar (por ejemplo, {"campo": "valor"}).
-    :return: Resultado de la consulta.
-    """
-    try:
-        # Conectar al cliente MongoDB
-        cliente = MongoClient(host, puerto)
-        
-        # Seleccionar la base de datos
-        base_datos = cliente[nombre_base_datos]
-        
-        # Seleccionar la colección
-        coleccion = base_datos[nombre_coleccion]
-        
-        # Ejecutar la consulta
-        resultados = coleccion.find(consulta)
-        
-        # Convertir los resultados a una lista
-        lista_resultados = list(resultados)
-        
-        # Cerrar la conexión
-        cliente.close()
-        
-        return lista_resultados
-    
-    except Exception as e:
-        print("Error al ejecutar la consulta:", e)
-        return None
+    def consultar_documentos(self, filtro={}):
+        """Consulta documentos en la colección."""
+        documentos = self.coleccion.find(filtro)
+        return list(documentos)
 
 # Ejemplo de uso
-host = "localhost"
-puerto = 27017
-nombre_base_datos = "BaseMongoProyectoFinal"
-nombre_coleccion = "Novelas"
-consulta = {"original": True}
+if __name__ == "__main__":
+    # Crear instancia de la clase
 
-resultados = ejecutar_consulta_mongodb(host, puerto, nombre_base_datos, nombre_coleccion, consulta)
-print(resultados)
+    gestor = MongoDBManager("mongodb://localhost:27017/", "BaseMongoProyectoFinal", "Novelas")
+
+    with open(os.path.abspath("../assets/images/LosJuegosDelHambreSinsajoParte1.jpg"), "rb") as archivo_imagen:
+            datos_binarios = Binary(archivo_imagen.read())  
+    # Insertar un documento
+    documento = {"_id": ObjectId(), "original": True, "name":"Los Juegos Del Hambre Sinsajo Parte 1", "img":datos_binarios, "páginas":["página1", "Página2","Página3"]}
+    gestor.insertar_documento(documento)
+
+    # Consultar documentos
+    resultados = gestor.consultar_documentos({"name": "Los Juegos Del Hambre Sinsajo Parte 1"})
+    print("Documentos encontrados:", resultados)
