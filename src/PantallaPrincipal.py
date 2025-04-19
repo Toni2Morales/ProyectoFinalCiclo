@@ -8,6 +8,10 @@ from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.popup import Popup
+from .ConexionMongoDB import MongoDBManager
+from PIL import Image as PILImage
+import io
+import os
 
 class ScreenThree(Screen):
     def __init__(self, **kwargs):
@@ -19,6 +23,8 @@ class ScreenThree(Screen):
             self.rect = Rectangle(size=self.size, pos=self.pos)
         self.bind(size=self.update_background, pos=self.update_background)
 
+        # Crear el gestor de MongoDB
+        self.gestor = MongoDBManager("mongodb://localhost:27017/", "BaseMongoProyectoFinal", "Novelas")
         # Diseño principal
         layout = FloatLayout()
 
@@ -94,16 +100,18 @@ class ScreenThree(Screen):
 
             # Crear los botones superiores para las subsecciones
             button_subsection_1 = Button(
-                text="Incompletas",
+                text="[u]Incompletas[/u]",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
-                background_color=(0.57, 0.37, 0.57, 1)
+                background_color=(0.57, 0.37, 0.57, 1),
+                markup = True
             )
             button_subsection_2 = Button(
                 text="Completas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
-                background_color=(0.57, 0.37, 0.57, 1)
+                background_color=(0.57, 0.37, 0.57, 1),
+                markup = True
             )
 
             # Vincular los botones de subsecciones a funciones
@@ -126,9 +134,10 @@ class ScreenThree(Screen):
                 size_hint_y=None         # Habilitar desplazamiento vertical
             )
             scroll_content.bind(minimum_height=scroll_content.setter("height"))  # Ajustar altura dinámica
-
+            
+            resultados = self.gestor.consultar_documentos()
             # Añadir contenido inicial al contenedor
-            for i in range(20):  # Ejemplo: añadir múltiples elementos
+            for novela in resultados:  # Ejemplo: añadir múltiples elementos
                 box_ly = BoxLayout(
                     size_hint_y=None,
                     height=200,
@@ -142,7 +151,7 @@ class ScreenThree(Screen):
                     pos_hint={"x": 0.25},
                 )
                 Button1 = Button(
-                    text=f"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" + "\nLeer más ...",
+                    text=novela["páginas"][0] + "\nLeer más...",
                     background_normal='',
                     background_color=(0.57, 0.37, 0.57, 0.39),
                     pos_hint={"x": 0.4, "y": 0},
@@ -153,6 +162,14 @@ class ScreenThree(Screen):
                 Button1.bind(
                     size=lambda instance, value: setattr(instance, 'text_size', value)
                 )
+
+                # Decodificar la imagen de la novela
+                # Convertir la imagen de bytes a un objeto PIL 
+                imagen = PILImage.open(io.BytesIO(novela["img"]))
+                nombre_archivo = novela["nombre"].replace(" ", "_").replace("/", "_")
+
+                imagen.save("../assets/imgTemporales/" + nombre_archivo + ".png")  # Guardar la imagen en un archivo
+                # Guardar la imagen decodificada en un archivo temporal
 
                 float_ly.add_widget(Button1)
                 float_ly.add_widget(Button(
@@ -166,7 +183,7 @@ class ScreenThree(Screen):
                     size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Image(
-                    source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
+                    source="../assets/imgTemporales/" + nombre_archivo + ".png",
                     fit_mode = "scale-down",
                     pos_hint={"x": -0.28, "y": 0},
                     size_hint=(0.7, 0.7),
@@ -329,16 +346,18 @@ class ScreenThree(Screen):
 
             # Crear los botones superiores para las subsecciones
             button_subsection_1 = Button(
-                text="Incompletas",
+                text="[u]Incompletas[/u]",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
-                background_color=(0.57, 0.37, 0.57, 1)
+                background_color=(0.57, 0.37, 0.57, 1),
+                markup = True
             )
             button_subsection_2 = Button(
                 text="Completas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
-                background_color=(0.57, 0.37, 0.57, 1)
+                background_color=(0.57, 0.37, 0.57, 1),
+                markup = True
             )
 
             # Vincular los botones de subsecciones a funciones
@@ -362,8 +381,9 @@ class ScreenThree(Screen):
             )
             scroll_content.bind(minimum_height=scroll_content.setter("height"))  # Ajustar altura dinámica
 
+            resultados = self.gestor.consultar_documentos()
             # Añadir contenido inicial al contenedor
-            for i in range(20):  # Ejemplo: añadir múltiples elementos
+            for novela in resultados:  # Ejemplo: añadir múltiples elementos
                 box_ly = BoxLayout(
                     size_hint_y=None,
                     height=200,
@@ -377,7 +397,7 @@ class ScreenThree(Screen):
                     pos_hint={"x": 0.25},
                 )
                 Button1 = Button(
-                    text=f"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" + "\nLeer más ...",
+                    text=novela["páginas"][0] + "\nLeer más...",
                     background_normal='',
                     background_color=(0.57, 0.37, 0.57, 0.39),
                     pos_hint={"x": 0.4, "y": 0},
@@ -433,13 +453,15 @@ class ScreenThree(Screen):
                 text="Incompletas",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.1, "y": 0.85},  # Parte superior izquierda
-                background_color=(0.57, 0.37, 0.57, 1)
+                background_color=(0.57, 0.37, 0.57, 1),
+                markup = True
             )
             button_subsection_2 = Button(
-                text="Completas",
+                text="[u]Completas[/u]",
                 size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.6, "y": 0.85},  # Parte superior derecha
-                background_color=(0.57, 0.37, 0.57, 1)
+                background_color=(0.57, 0.37, 0.57, 1),
+                markup = True
             )
 
             # Vincular los botones de subsecciones a funciones
@@ -461,10 +483,11 @@ class ScreenThree(Screen):
                 orientation="vertical",  # Apilar los widgets verticalmente
                 size_hint_y=None         # Habilitar desplazamiento vertical
             )
-            scroll_content.bind(minimum_height=scroll_content.setter("height"))  # Ajustar altura dinámica
-
-            # Añadir contenido inicial al contenedor
-            for i in range(20):  # Ejemplo: añadir múltiples elementos
+            scroll_content.bind(minimum_height=scroll_content.setter("height"))  # Ajustar altura 
+            
+            resultados = self.gestor.consultar_documentos()
+            # Añadir contenido inicial al contenedor            
+            for novela in resultados:  # Ejemplo: añadir múltiples elementos
                 box_ly = BoxLayout(
                     size_hint_y=None,
                     height=200,
@@ -478,7 +501,7 @@ class ScreenThree(Screen):
                     pos_hint={"x": 0.25},
                 )
                 Button1 = Button(
-                    text=f"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" + "\nLeer más ...",
+                    text=novela["páginas"][0] + "\nLeer más...",
                     background_normal='',
                     background_color=(0.57, 0.37, 0.57, 0.39),
                     pos_hint={"x": 0.4, "y": 0},
@@ -520,7 +543,6 @@ class ScreenThree(Screen):
 
             # Agregar el diseño completo de la Sección B al área dinámica
             self.section_layout.add_widget(section_b_layout)
-
 
     def update_background(self, *args):
         self.rect.size = self.size

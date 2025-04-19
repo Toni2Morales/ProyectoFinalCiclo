@@ -27,9 +27,17 @@ if __name__ == "__main__":
     with open(os.path.abspath("../assets/images/LosJuegosDelHambreSinsajoParte1.jpg"), "rb") as archivo_imagen:
             datos_binarios = Binary(archivo_imagen.read())  
     # Insertar un documento
-    documento = {"_id": ObjectId(), "original": True, "name":"Los Juegos Del Hambre Sinsajo Parte 1", "img":datos_binarios, "páginas":["página1", "Página2","Página3"]}
+    documento = {"_id": ObjectId(), 
+                "original": True, 
+                "name":"Los Juegos Del Hambre Sinsajo Parte 1",
+                "img":datos_binarios,
+                "páginas":["página4", "Página5","6"],
+                "finalizado": True,
+                "meGusta": 856,
+                "comentarios": ["Me encanta esta novela", "No me gusta el final"],
+                "calificación": 4.5}
     gestor.insertar_documento(documento)
 
     # Consultar documentos
-    resultados = gestor.consultar_documentos({"name": "Los Juegos Del Hambre Sinsajo Parte 1"})
-    print("Documentos encontrados:", resultados)
+    # resultados = gestor.consultar_documentos({"name": "Los Juegos Del Hambre Sinsajo Parte 1"})
+    # print("Documentos encontrados:", resultados)
