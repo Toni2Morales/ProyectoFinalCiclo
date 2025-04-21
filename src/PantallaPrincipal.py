@@ -3,6 +3,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Rectangle
 from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
@@ -85,11 +86,57 @@ class ScreenThree(Screen):
                 size_hint=(0.8, 0.2),
                 pos_hint={"x": 0.1, "y": 0.6}
             ))
-            self.section_layout.add_widget(Button(
-                text="Botón en Sección A",
+            botonCrear = Button(
+                text="Crear novela",
                 size_hint=(0.4, 0.1),
                 pos_hint={"x": 0.3, "y": 0.4}
-            ))
+            )
+            botonCrear.bind(on_press=lambda x: self.change_section("Sección A1"))  # Cambia a la sección de creación
+            self.section_layout.add_widget(botonCrear)
+        elif section_name == "Sección A1":
+            self.button1.text = "[u]CREACIÓN[/u]"
+            self.button2.text = "NOVELAS"
+            self.button3.text = "PERFIL"
+
+            # Diseño para la sección A1
+            section_a1_layout = FloatLayout(size_hint=(1, 1))
+
+            # Crear un TextInput para el nombre de la novela
+            name_input = TextInput(
+                hint_text="Nombre de la novela",
+                size_hint=(0.8, 0.1),
+                pos_hint={"x": 0.1, "y": 0.9},  # Parte superior
+                multiline=False,  # Desactivar multilinea
+            )
+            section_a1_layout.add_widget(name_input)
+
+            text_input = TextInput(
+                hint_text="texto de la novela",
+                size_hint=(0.8, 0.7),
+                pos_hint={"x": 0.1, "y": 0.2},
+                multiline=True,  # Desactivar multilinea
+            )
+            section_a1_layout.add_widget(text_input)
+
+            next_button = Button(
+                text="siguiente página",
+                size_hint=(0.4, 0.1),
+                pos_hint={"x": 0.1, "y": 0.1},  # Debajo del TextInput
+                background_color=(0.57, 0.37, 0.57, 1),
+            )
+            next_button.bind(on_press=lambda x: self.change_section("Sección A1"))  # Cambia a la sección de creación
+            section_a1_layout.add_widget(next_button)
+            # Crear un botón para guardar la novela
+            save_button = Button(
+                text="Guardar novela",
+                size_hint=(0.4, 0.1),
+                pos_hint={"x": 0.5, "y": 0.1},  # Debajo del TextInput
+                background_color=(0.57, 0.37, 0.57, 1),
+            )
+            section_a1_layout.add_widget(save_button)
+
+            # Añadir el diseño a la sección dinámica
+            self.section_layout.add_widget(section_a1_layout)
         elif section_name == "Sección B":
             self.button1.text = "CREACIÓN"
             self.button2.text = "[u]NOVELAS[/u]"
@@ -135,7 +182,7 @@ class ScreenThree(Screen):
             )
             scroll_content.bind(minimum_height=scroll_content.setter("height"))  # Ajustar altura dinámica
             
-            resultados = self.gestor.consultar_documentos()
+            resultados = self.gestor.consultar_documentos({"finalizado": False})
             # Añadir contenido inicial al contenedor
             for novela in resultados:  # Ejemplo: añadir múltiples elementos
                 box_ly = BoxLayout(
@@ -168,7 +215,7 @@ class ScreenThree(Screen):
                 imagen = PILImage.open(io.BytesIO(novela["img"]))
                 nombre_archivo = novela["nombre"].replace(" ", "_").replace("/", "_")
 
-                imagen.save("../assets/imgTemporales/" + nombre_archivo + ".png")  # Guardar la imagen en un archivo
+                imagen.save("assets/imgTemporales/" + nombre_archivo + ".png")  # Guardar la imagen en un archivo
                 # Guardar la imagen decodificada en un archivo temporal
 
                 float_ly.add_widget(Button1)
@@ -183,7 +230,7 @@ class ScreenThree(Screen):
                     size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Image(
-                    source="../assets/imgTemporales/" + nombre_archivo + ".png",
+                    source="assets/imgTemporales/" + nombre_archivo + ".png",
                     fit_mode = "scale-down",
                     pos_hint={"x": -0.28, "y": 0},
                     size_hint=(0.7, 0.7),
@@ -329,7 +376,6 @@ class ScreenThree(Screen):
             self.section_layout.add_widget(section_c_layout)
 
 
-
     def show_subsection(self, scroll_content, subsection_number):
         """Actualizar el contenido según la subsección seleccionada."""
         # Limpiar el contenido actual del scroll_content
@@ -380,8 +426,7 @@ class ScreenThree(Screen):
                 size_hint_y=None         # Habilitar desplazamiento vertical
             )
             scroll_content.bind(minimum_height=scroll_content.setter("height"))  # Ajustar altura dinámica
-
-            resultados = self.gestor.consultar_documentos()
+            resultados = self.gestor.consultar_documentos({"finalizado": False})
             # Añadir contenido inicial al contenedor
             for novela in resultados:  # Ejemplo: añadir múltiples elementos
                 box_ly = BoxLayout(
@@ -409,6 +454,13 @@ class ScreenThree(Screen):
                     size=lambda instance, value: setattr(instance, 'text_size', value)
                 )
 
+                # Decodificar la imagen de la novela
+                # Convertir la imagen de bytes a un objeto PIL 
+                imagen = PILImage.open(io.BytesIO(novela["img"]))
+                nombre_archivo = novela["nombre"].replace(" ", "_").replace("/", "_")
+
+                imagen.save("assets/imgTemporales/" + nombre_archivo + ".png")  # Guardar la imagen en un archivo
+                # Guardar la imagen decodificada en un archivo temporal
                 float_ly.add_widget(Button1)
                 float_ly.add_widget(Button(
                     pos_hint={"x": 0, "y": 0.9},
@@ -421,7 +473,7 @@ class ScreenThree(Screen):
                     size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Image(
-                    source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
+                    source="assets/imgTemporales/" + nombre_archivo + ".png",
                     fit_mode = "scale-down",
                     pos_hint={"x": -0.28, "y": 0},
                     size_hint=(0.7, 0.7),
@@ -485,7 +537,7 @@ class ScreenThree(Screen):
             )
             scroll_content.bind(minimum_height=scroll_content.setter("height"))  # Ajustar altura 
             
-            resultados = self.gestor.consultar_documentos()
+            resultados = self.gestor.consultar_documentos({"finalizado": True})
             # Añadir contenido inicial al contenedor            
             for novela in resultados:  # Ejemplo: añadir múltiples elementos
                 box_ly = BoxLayout(
@@ -513,6 +565,13 @@ class ScreenThree(Screen):
                     size=lambda instance, value: setattr(instance, 'text_size', value)
                 )
 
+                # Decodificar la imagen de la novela
+                # Convertir la imagen de bytes a un objeto PIL 
+                imagen = PILImage.open(io.BytesIO(novela["img"]))
+                nombre_archivo = novela["nombre"].replace(" ", "_").replace("/", "_")
+
+                imagen.save("assets/imgTemporales/" + nombre_archivo + ".png")  # Guardar la imagen en un archivo
+                # Guardar la imagen decodificada en un archivo temporal
                 float_ly.add_widget(Button1)
                 float_ly.add_widget(Button(
                     pos_hint={"x": 0, "y": 0.9},
@@ -525,7 +584,7 @@ class ScreenThree(Screen):
                     size_hint=(0.02, 0.02))
                 )
                 float_ly.add_widget(Image(
-                    source='assets/images/LosJuegosDelHambreSinsajoParte1.jpg',
+                    source="assets/imgTemporales/" + nombre_archivo + ".png",
                     fit_mode = "scale-down",
                     pos_hint={"x": -0.28, "y": 0},
                     size_hint=(0.7, 0.7),
