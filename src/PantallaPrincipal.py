@@ -4,6 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
+from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
@@ -12,7 +13,8 @@ from kivy.uix.popup import Popup
 from .ConexionMongoDB import MongoDBManager
 from PIL import Image as PILImage
 import io
-import os
+from bson.binary import Binary  # Importa Binary de bson
+from bson import ObjectId  # Importa ObjectId de bson
 
 class ScreenThree(Screen):
     def __init__(self, **kwargs):
@@ -96,16 +98,14 @@ class ScreenThree(Screen):
         elif section_name == "Sección A1":
             self.button1.text = "[u]CREACIÓN[/u]"
             self.button2.text = "NOVELAS"
-            self.button3.text = "PERFIL"
-
-            # Diseño para la sección A1
+            self.button3.text = "PERFIL"            # Diseño para la sección A1
             section_a1_layout = FloatLayout(size_hint=(1, 1))
-
+            self.imagen = Binary(b"")
             # Crear un TextInput para el nombre de la novela
             name_input = TextInput(
                 hint_text="Nombre de la novela",
                 size_hint=(0.8, 0.1),
-                pos_hint={"x": 0.1, "y": 0.9},  # Parte superior
+                pos_hint={"x": 0.1, "y": 1},  # Parte superior
                 multiline=False,  # Desactivar multilinea
             )
             section_a1_layout.add_widget(name_input)
@@ -113,26 +113,89 @@ class ScreenThree(Screen):
             text_input = TextInput(
                 hint_text="texto de la novela",
                 size_hint=(0.8, 0.7),
-                pos_hint={"x": 0.1, "y": 0.2},
+                pos_hint={"x": 0.1, "y": 0.3},
                 multiline=True,  # Desactivar multilinea
             )
             section_a1_layout.add_widget(text_input)
 
             next_button = Button(
                 text="siguiente página",
-                size_hint=(0.4, 0.1),
-                pos_hint={"x": 0.1, "y": 0.1},  # Debajo del TextInput
+                size_hint=(0.3, 0.1),
+                pos_hint={"x": 0.2, "y": 0.1},  # Debajo del TextInput
                 background_color=(0.57, 0.37, 0.57, 1),
             )
-            next_button.bind(on_press=lambda x: self.change_section("Sección A1"))  # Cambia a la sección de creación
+            next_button.bind(on_press=lambda x: self.change_section("Sección A1"))  # Cambia a la sección de 
+            insertar_imagen_button = Button(
+                text="Imagen",
+                size_hint=(0.1, 0.2),
+                pos_hint={"x": 0, "y": 0.1},  # Debajo del TextInput
+                background_color=(0.57, 0.37, 0.57, 1),
+            )
+            # Función para abrir el FileChooser
+            def open_file_chooser(instance):
+                # Crear el FileChooserPopup
+                file_chooser = FileChooserListView(
+                    size_hint=(0.8, 0.8),
+                    pos_hint={"x": 0.1, "y": 0.2},  # Ajusta la posición
+                )
+                
+                # Botón de confirmación
+                confirm_button = Button(
+                    text="Confirmar selección",
+                    size_hint=(0.8, 0.1),
+                    pos_hint={"x": 0.1, "y": 0.05}
+                )
+                
+                # Contenedor del popup (FileChooser + botón de confirmación)
+                popup_content = FloatLayout()
+                popup_content.add_widget(file_chooser)
+                popup_content.add_widget(confirm_button)
+                
+                popup = Popup(
+                    title="Selecciona una imagen",
+                    content=popup_content,
+                    size_hint=(0.9, 0.9)
+                )
+
+                def confirm_selection(instance):
+                    if file_chooser.selection:  # Verifica si hay selección
+                        # Lee la imagen seleccionada
+                        insertar_imagen_button.background_normal = file_chooser.selection[0]
+                        with open(file_chooser.selection[0], "rb") as f:
+                            image_data = f.read()  # Lee los datos binarios de la imagen
+                        
+                        # Convierte los datos binarios en un objeto BSON Binary
+                        self.imagen = Binary(image_data)
+                        
+                        # Aquí puedes guardar `bson_image` en MongoDB o usarlo como necesites
+                        print("Imagen convertida a BSON Binary:", self.imagen)
+                        
+                        popup.dismiss()  # Cierra el Popup
+                
+                # Vincula el botón de confirmación al evento
+                confirm_button.bind(on_press=confirm_selection)
+                
+                popup.open()
+                # Vincular el botón con la función de abrir el FileChooser
+            insertar_imagen_button.bind(on_press=open_file_chooser)
+            section_a1_layout.add_widget(insertar_imagen_button)
             section_a1_layout.add_widget(next_button)
             # Crear un botón para guardar la novela
             save_button = Button(
                 text="Guardar novela",
-                size_hint=(0.4, 0.1),
+                size_hint=(0.3, 0.1),
                 pos_hint={"x": 0.5, "y": 0.1},  # Debajo del TextInput
                 background_color=(0.57, 0.37, 0.57, 1),
             )
+            save_button.bind(on_press=lambda x: self.gestor.insertar_documento({"_id": ObjectId(), 
+                "original": True, 
+                "nombre":name_input.text,
+                "img":self.imagen,
+                "páginas":[text_input.text],
+                "finalizado": False,
+                "meGusta": 0,
+                "comentarios": [],
+                "calificación": 0}))
             section_a1_layout.add_widget(save_button)
 
             # Añadir el diseño a la sección dinámica
