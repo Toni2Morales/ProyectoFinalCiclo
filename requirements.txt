@@ -10,6 +10,7 @@ kivy-deps.glew==0.3.1
 Kivy-Garden==0.1.5
 kivy_deps.sdl2==0.8.0
 mysql-connector-python==9.2.0
+pillow==11.2.1
 Pygments==2.19.1
 pymongo==4.12.0
 pypiwin32==223
